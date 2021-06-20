@@ -21,11 +21,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-     // TODO: unsubscribe
+    // TODO: unsubscribe
     this.store.select('users').subscribe(
       users => {
         if (users) {
-          this.maskUserName = users.maskUserName
+          this.maskUserName = users.maskUserName;
         }
       }
     )
@@ -36,9 +36,9 @@ export class LoginComponent implements OnInit {
   }
 
   checkChanged(): void {
-    this.store.dispatch({
-      type: '[User] Mask User Name'
-    });
+    this.store.dispatch(
+      { type: '[User] Mask User Name' }
+    );
   }
 
   login(loginForm: NgForm): void {
