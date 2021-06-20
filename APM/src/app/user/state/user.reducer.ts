@@ -6,6 +6,6 @@ export const userReducer = createReducer(
     return {
       ...state,
       maskUserName: !state.maskUserName
-    }
+    };
   })
-)
+);
