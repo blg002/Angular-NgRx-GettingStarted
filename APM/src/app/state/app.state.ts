@@ -1,6 +1,3 @@
-import { ProductState } from "../products/state/product.reducer";
-
-export interface AppState {
-  products: ProductState;
+export interface State {
   users: any;
 }
