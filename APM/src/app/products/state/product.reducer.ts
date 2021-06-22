@@ -1,4 +1,4 @@
-import { createAction, createFeatureSelector, createReducer, createSelector, on } from "@ngrx/store";
+import { createFeatureSelector, createReducer, createSelector, on } from "@ngrx/store";
 import * as AppState from '../../state/app.state';
 import { Product } from "../product";
 import * as ProductActions from "./product.actions";
@@ -39,6 +39,24 @@ export const getProducts = createSelector(
 export const productReducer = createReducer<ProductState>(
   initialState,
   
+  // on(ProductActions.loadProducts, (state): ProductState => {
+  //   // Effect to Serivce to make http call
+  //   return {
+  //     id: 0,
+  //     productName: '',
+  //     productCode: 'New',
+  //     description: '',
+  //     starRating: 0,
+  //   }
+  // }),
+
+  on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      products: action.products
+    }
+  }),
+
   on(ProductActions.toggleProductCode, (state): ProductState => {
     return {
       ...state,

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
-import { State, getShowProductCode, getCurrentProduct } from '../state/product.reducer';
+import { State, getShowProductCode, getCurrentProduct, getProducts } from '../state/product.reducer';
 import * as ProductActions from "../state/product.actions";
 
 @Component({
@@ -33,7 +33,8 @@ export class ProductListComponent implements OnInit {
       currentProduct => this.selectedProduct = currentProduct
     );
 
-    this.productService.getProducts().subscribe({
+    this.store.dispatch(ProductActions.loadProducts());
+    this.store.select(getProducts).subscribe({
       next: (products: Product[]) => this.products = products,
       error: err => this.errorMessage = err
     });

@@ -12,7 +12,7 @@ export const initCurrentProduct = createAction('[Product] Init Current Product')
 export const loadProducts = createAction('[Product] Load');
 export const loadProductsSuccess = createAction(
   '[Product] Load Success',
-  props<{ product: Product[] }>()
+  props<{ products: Product[] }>()
 );
 export const loadProductsFail = createAction(
   '[Product] Load Fail',
