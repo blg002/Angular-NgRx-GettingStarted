@@ -144,4 +144,20 @@ export const productReducer = createReducer<ProductState>(
     }
   }),
 
+  on(ProductActions.deleteProductSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      error: '',
+      currentProductId: null,
+      products: state.products.filter(product => product.id !== action.productId)
+    }
+  }),
+
+  on(ProductActions.deleteProductFail, (state, action): ProductState => {
+    return {
+      ...state,
+      error: action.error
+    }
+  }),
+
 );
