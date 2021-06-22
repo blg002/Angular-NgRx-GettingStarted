@@ -7,7 +7,7 @@ import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
 
 import { Store } from '@ngrx/store';
-import { State, getCurrentProduct } from '../state/product.reducer';
+import { State, getCurrentProduct, getError } from '../state/product.reducer';
 import * as ProductActions from "../state/product.actions";
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
-  errorMessage = '';
+  errorMessage$: Observable<string>;
   productForm: FormGroup;
 
   // Use with the generic validation message class
@@ -138,6 +138,7 @@ export class ProductEditComponent implements OnInit {
           });
         } else {
           this.store.dispatch(ProductActions.updateProduct({ product }));
+          this.errorMessage$ = this.store.select(getError);
         }
       }
     }
