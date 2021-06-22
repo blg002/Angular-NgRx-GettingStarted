@@ -73,6 +73,8 @@ export class ProductEditComponent implements OnInit {
     this.productForm.valueChanges.subscribe(
       () => this.displayMessage = this.genericValidator.processMessages(this.productForm)
     );
+
+    this.errorMessage$ = this.store.select(getError);
   }
 
   // Also validate on blur
@@ -114,7 +116,6 @@ export class ProductEditComponent implements OnInit {
       if (confirm(`Really delete the product: ${product.productName}?`)) {
         this.productService.deleteProduct(product.id).subscribe({
           next: () => this.store.dispatch(ProductActions.clearCurrentProduct()),
-          error: err => this.errorMessage = err
         });
       }
     } else {
@@ -134,11 +135,9 @@ export class ProductEditComponent implements OnInit {
         if (product.id === 0) {
           this.productService.createProduct(product).subscribe({
             next: p => this.store.dispatch(ProductActions.setCurrentProduct({ currentProductId: p.id })),
-            error: err => this.errorMessage = err
           });
         } else {
           this.store.dispatch(ProductActions.updateProduct({ product }));
-          this.errorMessage$ = this.store.select(getError);
         }
       }
     }
