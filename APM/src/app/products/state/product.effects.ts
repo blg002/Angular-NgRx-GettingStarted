@@ -23,6 +23,16 @@ export class ProductEffects {
     )
   });
 
+  createProduct$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ProductActions.createProduct),
+      concatMap(action => this.productService.createProduct(action.product).pipe(
+        map(product => ProductActions.createProductSuccess({ product })),
+        catchError(error => of(ProductActions.createProductFail({ error  })))
+      ))
+    )
+  });
+
   updateProduct$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ProductActions.updateProduct),
@@ -32,4 +42,5 @@ export class ProductEffects {
       ))
     )
   });
+
 }

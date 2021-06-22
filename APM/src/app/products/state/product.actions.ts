@@ -18,10 +18,21 @@ export const loadProductsSuccess = createAction(
 export const loadProductsFail = createAction(
   '[Product] Load Fail',
   props<{ error: string }>()
-)
+);
 
 // Create
-
+export const createProduct = createAction(
+  '[Product] Create Product',
+  props<{ product: Product }>()
+);
+export const createProductSuccess = createAction(
+  '[Product] Create Product Success',
+  props<{ product: Product }>()
+);
+export const createProductFail = createAction(
+  '[Product] Create Product Fail',
+  props<{ error: string }>()
+);
 
 // Update
 export const updateProduct = createAction(
@@ -31,10 +42,10 @@ export const updateProduct = createAction(
 export const updateProductSuccess = createAction(
   '[Product] Update Product Success',
   props<{ product: Product }>()
-)
+);
 export const updateProductFail = createAction(
   '[Product] Update Product Fail',
   props<{ error: string }>()
-)
+);
 
 // Destroy
