@@ -9,14 +9,14 @@ export interface State extends AppState.State {
 
 export interface ProductState {
   showProductCode: boolean;
-  currentProduct: Product;
+  currentProductId: number | null;
   products: Product[];
   error: string;
 }
 
 const initialState: ProductState = {
   showProductCode: true,
-  currentProduct: null,
+  currentProductId: null,
   products: [],
   error: '',
 }
@@ -28,9 +28,26 @@ export const getShowProductCode = createSelector(
   state => state.showProductCode
 )
 
+export const getCurrentProductId = createSelector(
+  getProductFeatureState,
+  state => state.currentProductId
+)
+
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
-  state => state.currentProduct
+  getCurrentProductId,
+  (state, currentProductID) => {
+    if (currentProductID === 0) {
+      return {
+        id: 0,
+        productName: '',
+        productCode: 'New',
+        description: '',
+        starRating: 0,
+      }
+    }
+    return currentProductID ? state.products.find(p => p.id === currentProductID) : null
+  }
 )
 
 export const getProducts = createSelector(
@@ -60,7 +77,7 @@ export const productReducer = createReducer<ProductState>(
       error: action.error
     }
   }),
-
+  
   on(ProductActions.toggleProductCode, (state): ProductState => {
     return {
       ...state,
@@ -71,27 +88,21 @@ export const productReducer = createReducer<ProductState>(
   on(ProductActions.setCurrentProduct, (state, action): ProductState => {
     return {
       ...state,
-      currentProduct: action.product
+      currentProductId: action.currentProductId
     }
   }),
 
   on(ProductActions.clearCurrentProduct, (state): ProductState => {
     return {
       ...state,
-      currentProduct: null
+      currentProductId: null
     }
   }),
 
   on(ProductActions.initCurrentProduct, (state): ProductState => {
     return {
       ...state,
-      currentProduct: {
-        id: 0,
-        productName: '',
-        productCode: 'New',
-        description: '',
-        starRating: 0,
-      }
+      currentProductId: 0
     }
   })
 );
