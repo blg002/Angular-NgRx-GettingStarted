@@ -9,6 +9,7 @@ export const setCurrentProduct = createAction(
 export const clearCurrentProduct = createAction('[Prodcut] Clear Current Product');
 export const initCurrentProduct = createAction('[Product] Init Current Product');
 
+// Load
 export const loadProducts = createAction('[Product] Load');
 export const loadProductsSuccess = createAction(
   '[Product] Load Success',
@@ -19,6 +20,10 @@ export const loadProductsFail = createAction(
   props<{ error: string }>()
 )
 
+// Create
+
+
+// Update
 export const updateProduct = createAction(
   '[Product] Update Product',
   props<{ product: Product }>()  
@@ -31,3 +36,5 @@ export const updateProductFail = createAction(
   '[Product] Update Product Fail',
   props<{ error: string }>()
 )
+
+// Destroy
