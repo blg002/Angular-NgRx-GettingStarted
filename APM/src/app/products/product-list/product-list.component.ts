@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Product } from '../product';
-import { State, getShowProductCode, getCurrentProduct, getProducts } from '../state/product.reducer';
+import { State, getShowProductCode, getCurrentProduct, getProducts, getError } from '../state/product.reducer';
 import * as ProductActions from "../state/product.actions";
 import { Observable } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductListComponent implements OnInit {
   pageTitle = 'Products';
-  errorMessage: string;
+  errorMessage$: Observable<string>;
 
   displayCode$: Observable<boolean>;
   products$: Observable<Product[]>;
@@ -30,6 +30,8 @@ export class ProductListComponent implements OnInit {
     
     this.selectedProduct$ = this.store.select(getCurrentProduct);
     this.displayCode$ = this.store.select(getShowProductCode);
+
+    this.errorMessage$ = this.store.select(getError);
   }
 
   checkChanged(): void {
