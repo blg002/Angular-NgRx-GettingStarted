@@ -13,16 +13,6 @@ export class ProductEffects {
     private productService: ProductService,
   ) {}
 
-  loadProducts$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(ProductActions.loadProducts),
-      mergeMap(() => this.productService.getProducts().pipe(
-        map(products => ProductActions.loadProductsSuccess({ products })),
-        catchError(error => of(ProductActions.loadProductsFail({ error })))
-      ))
-    )
-  });
-
   createProduct$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ProductActions.createProduct),
@@ -32,6 +22,16 @@ export class ProductEffects {
           catchError(error => of(ProductActions.createProductFail({ error  })))
         )
       )
+    )
+  });
+
+  loadProducts$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ProductActions.loadProducts),
+      mergeMap(() => this.productService.getProducts().pipe(
+        map(products => ProductActions.loadProductsSuccess({ products })),
+        catchError(error => of(ProductActions.loadProductsFail({ error })))
+      ))
     )
   });
 

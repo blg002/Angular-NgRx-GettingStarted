@@ -93,21 +93,7 @@ export const productReducer = createReducer<ProductState>(
     }
   }),
 
-  on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
-    return {
-      ...state,
-      products: action.products,
-      error: ''
-    }
-  }),
-
-  on(ProductActions.loadProductsFail, (state, action): ProductState => {
-    return {
-      ...state,
-      error: action.error
-    }
-  }),
-
+  // Create
   on(ProductActions.createProductSuccess, (state, action): ProductState => {
     return {
       ...state,
@@ -124,6 +110,23 @@ export const productReducer = createReducer<ProductState>(
     }
   }),
 
+  // Read
+  on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      products: action.products,
+      error: ''
+    }
+  }),
+
+  on(ProductActions.loadProductsFail, (state, action): ProductState => {
+    return {
+      ...state,
+      error: action.error
+    }
+  }),
+
+  // Update
   on(ProductActions.updateProductSuccess, (state, action): ProductState => {
     const updatedProducts = state.products.map(item => {
       return item.id === action.product.id ? action.product : item
@@ -144,6 +147,7 @@ export const productReducer = createReducer<ProductState>(
     }
   }),
 
+  // Delete
   on(ProductActions.deleteProductSuccess, (state, action): ProductState => {
     return {
       ...state,
