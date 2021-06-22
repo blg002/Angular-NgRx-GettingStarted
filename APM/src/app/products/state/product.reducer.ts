@@ -63,21 +63,6 @@ export const getError = createSelector(
 export const productReducer = createReducer<ProductState>(
   initialState,
 
-  on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
-    return {
-      ...state,
-      products: action.products,
-      error: ''
-    }
-  }),
-
-  on(ProductActions.loadProductsFail, (state, action): ProductState => {
-    return {
-      ...state,
-      error: action.error
-    }
-  }),
-  
   on(ProductActions.toggleProductCode, (state): ProductState => {
     return {
       ...state,
@@ -104,5 +89,21 @@ export const productReducer = createReducer<ProductState>(
       ...state,
       currentProductId: 0
     }
-  })
+  }),
+
+  on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
+    return {
+      ...state,
+      products: action.products,
+      error: ''
+    }
+  }),
+
+  on(ProductActions.loadProductsFail, (state, action): ProductState => {
+    return {
+      ...state,
+      error: action.error
+    }
+  }),
+
 );
