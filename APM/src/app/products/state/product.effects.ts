@@ -28,10 +28,12 @@ export class ProductEffects {
   loadProducts$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(ProductActions.loadProducts),
-      mergeMap(() => this.productService.getProducts().pipe(
-        map(products => ProductActions.loadProductsSuccess({ products })),
-        catchError(error => of(ProductActions.loadProductsFail({ error })))
-      ))
+      mergeMap(() => this.productService.getProducts()
+        .pipe(
+          map(products => ProductActions.loadProductsSuccess({ products })),
+          catchError(error => of(ProductActions.loadProductsFail({ error })))
+        )
+      )
     )
   });
 
