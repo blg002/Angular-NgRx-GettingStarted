@@ -22,4 +22,11 @@ export class ProductEffects {
       ))
     )
   });
+
+  updateProduct$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(ProductActions.updateProduct),
+      mergeMap(() => this.productService.updateProduct(product))
+    )
+  });
 }
