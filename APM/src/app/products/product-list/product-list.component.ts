@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Product } from '../product';
-import { ProductService } from '../product.service';
 import { State, getShowProductCode, getCurrentProduct, getProducts } from '../state/product.reducer';
 import * as ProductActions from "../state/product.actions";
 import { Observable } from 'rxjs';
@@ -16,31 +15,21 @@ export class ProductListComponent implements OnInit {
   pageTitle = 'Products';
   errorMessage: string;
 
-  displayCode: boolean;
-
+  displayCode$: Observable<boolean>;
   products$: Observable<Product[]>;
-
-  // Used to highlight the selected product in the list
-  selectedProduct: Product | null;
+  selectedProduct$: Observable<Product>;
 
   constructor(
-    private productService: ProductService,
     private store: Store<State>,  
   ) {}
 
   ngOnInit(): void {
-    // TODO: unsubscribe
-    this.store.select(getCurrentProduct).subscribe(
-      currentProduct => this.selectedProduct = currentProduct
-    );
-
     this.products$ = this.store.select(getProducts);
+    
     this.store.dispatch(ProductActions.loadProducts());
-
-    // TODO: unsubscribe
-    this.store.select(getShowProductCode).subscribe(
-      showProductCode => this.displayCode = showProductCode
-    );
+    
+    this.selectedProduct$ = this.store.select(getCurrentProduct);
+    this.displayCode$ = this.store.select(getShowProductCode);
   }
 
   checkChanged(): void {
