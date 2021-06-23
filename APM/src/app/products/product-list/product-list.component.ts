@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Product } from '../product';
 
 @Component({
   selector: 'pm-product-list',
@@ -8,4 +9,23 @@ import { Component, Input } from '@angular/core';
 
 export class ProductListComponent {
   pageTitle = 'Products';
+  @Input() errorMessage: string;
+  @Input() displayCode: boolean;
+  @Input() products: Product[];
+  @Input() selectedProduct: Product;
+  @Output() displayCodeChanged = new EventEmitter<boolean>();
+  @Output() initNewProduct = new EventEmitter<void>();
+  @Output() productWasSelected = new EventEmitter<Product>();
+
+  checkChanged(): void {
+    this.displayCodeChanged.emit();
+  }
+
+  newProduct(): void {
+    this.initNewProduct.emit();
+  }
+
+  productSelected(product: Product): void {
+    this.productWasSelected.emit(product);
+  }
 }
