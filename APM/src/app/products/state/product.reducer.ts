@@ -1,11 +1,6 @@
-import { createFeatureSelector, createReducer, createSelector, on } from "@ngrx/store";
-import * as AppState from '../../state/app.state';
+import { createReducer, on } from "@ngrx/store";
 import { Product } from "../product";
 import * as ProductActions from "./product.actions";
-
-export interface State extends AppState.State {
-  products: ProductState;
-}
 
 export interface ProductState {
   showProductCode: boolean;
@@ -21,47 +16,6 @@ const initialState: ProductState = {
   error: '',
 }
 
-// Selectors
-const getProductFeatureState = createFeatureSelector<ProductState>('products');
-
-export const getShowProductCode = createSelector(
-  getProductFeatureState,
-  state => state.showProductCode
-)
-
-export const getCurrentProductId = createSelector(
-  getProductFeatureState,
-  state => state.currentProductId
-)
-
-export const getCurrentProduct = createSelector(
-  getProductFeatureState,
-  getCurrentProductId,
-  (state, currentProductID) => {
-    if (currentProductID === 0) {
-      return {
-        id: 0,
-        productName: '',
-        productCode: 'New',
-        description: '',
-        starRating: 0,
-      }
-    }
-    return currentProductID ? state.products.find(p => p.id === currentProductID) : null
-  }
-)
-
-export const getProducts = createSelector(
-  getProductFeatureState,
-  state => state.products
-)
-
-export const getError = createSelector(
-  getProductFeatureState,
-  state => state.error
-)
-
-// Reducers
 export const productReducer = createReducer<ProductState>(
   initialState,
 
