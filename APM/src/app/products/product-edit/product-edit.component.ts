@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Product } from '../product';
@@ -6,7 +6,6 @@ import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
 
-import { Store } from '@ngrx/store';
 import { State, getCurrentProduct, getError } from '../state';
 import { ProductPageActions } from "../state/actions";
 import { tap } from 'rxjs/operators';
@@ -17,21 +16,25 @@ import { Observable } from 'rxjs';
   selector: 'pm-product-edit',
   templateUrl: './product-edit.component.html'
 })
-export class ProductEditComponent implements OnInit {
+export class ProductEditComponent implements OnInit, OnChanges {
   pageTitle = 'Product Edit';
-  errorMessage$: Observable<string>;
-  productForm: FormGroup;
+  @Input() errorMessage: string;
+  @Input() selectedProduct: Product;
+  @Output() clearCurrent = new EventEmitter<void>();
+  @Output() create = new EventEmitter<Product>();
+  @Output() update = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
 
+  productForm: FormGroup;
+  
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
-  product$: Observable<Product | null>;
 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-    private store: Store<State>,
   ) {
 
     // Defines all of the validation messages for the form.
@@ -64,17 +67,18 @@ export class ProductEditComponent implements OnInit {
       description: ''
     });
 
-    // Watch for changes to the currently selected product
-    this.product$ = this.store.select(getCurrentProduct).pipe(
-      tap(currentProduct => this.displayProduct(currentProduct))
-    );
-
     // Watch for value changes for validation
     this.productForm.valueChanges.subscribe(
       () => this.displayMessage = this.genericValidator.processMessages(this.productForm)
     );
+  }
 
-    this.errorMessage$ = this.store.select(getError);
+  ngOnChanges(changes: SimpleChanges): void {
+    // patch form with value from the store
+    if (changes.selectedProduct) {
+      const product = changes.selectedProduct.currentValue as Product;
+      this.displayProduct(product);
+    }
   }
 
   // Also validate on blur
@@ -84,7 +88,7 @@ export class ProductEditComponent implements OnInit {
   }
 
   displayProduct(product: Product | null): void {
-    if (product) {
+    if (product && this.productForm) {
       // Reset the form back to pristine
       this.productForm.reset();
 
@@ -108,32 +112,32 @@ export class ProductEditComponent implements OnInit {
   cancelEdit(product: Product): void {
     // Redisplay the currently selected product
     // replacing any edits made
-    this.store.dispatch(ProductPageActions.clearCurrentProduct());
+    this.displayProduct(this.selectedProduct);
   }
 
   deleteProduct(product: Product): void {
-    if (product && product.id) {
-      if (confirm(`Really delete the product: ${product.productName}?`)) {
-        this.store.dispatch(ProductPageActions.deleteProduct({ productId: product.id }));
+    if (this.selectedProduct && this.selectedProduct.id) {
+      if (confirm(`Really delete the product: ${this.selectedProduct.productName}?`)) {
+        this.delete.emit(this.selectedProduct);
       }
     } else {
       // No need to delete, it was never saved
-      this.store.dispatch(ProductPageActions.clearCurrentProduct())
+      this.clearCurrent.emit();
     }
   }
 
-  saveProduct(originalProduct: Product): void {
+  saveProduct(): void {
     if (this.productForm.valid) {
       if (this.productForm.dirty) {
         // Copy over all of the original product properties
         // Then copy over the values from the form
         // This ensures values not on the form, such as the Id, are retained
-        const product = { ...originalProduct, ...this.productForm.value };
+        const product = { ...this.selectedProduct, ...this.productForm.value };
 
         if (product.id === 0) {
-          this.store.dispatch(ProductPageActions.createProduct({ product }));
+          this.create.emit(product);
         } else {
-          this.store.dispatch(ProductPageActions.updateProduct({ product }));
+          this.update.emit(product);
         }
       }
     }
