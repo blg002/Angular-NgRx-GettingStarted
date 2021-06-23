@@ -6,7 +6,7 @@ export const setCurrentProduct = createAction(
   '[Product Page] Set Current Product',
   props<{ currentProductId: number }>()
 );
-export const clearCurrentProduct = createAction('[Prodcut] Clear Current Product');
+export const clearCurrentProduct = createAction('[Product Page] Clear Current Product');
 export const initCurrentProduct = createAction('[Product Page] Init Current Product');
 
 // Create
